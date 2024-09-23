@@ -3,6 +3,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const setRouter = require('./app/route/route');
 const router = express.Router();
+const cors = require('cors')
 const http = require('http');
 
 const bodyParser = require('body-parser');
@@ -10,6 +11,8 @@ const appconfig = require('./app/config/appConfig');
 
 // Create an instance of Express
 const app = express();
+
+app.use(cors())
 
 app.use('/uploads', express.static('uploads'));
 
