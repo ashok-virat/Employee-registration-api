@@ -16,9 +16,13 @@ const userModel = new Schema({
         type: String,
         default: ''
     },
-    status: {
+    userType: {
         type: String,
         default: ''
+    },
+    isApproved: {
+        type: Boolean,
+        default: false
     },
     createdOn: {
         type: Date,
