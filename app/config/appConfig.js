@@ -4,7 +4,8 @@ appConfig.port = 4001;
 appConfig.allowedCorsOrigin = "*";
 appConfig.env = "dev";
 appConfig.db = {
-    uri: 'mongodb+srv://ashokChat:Viratashok@chat-app-free.gksijtl.mongodb.net/'
+    // uri: 'mongodb+srv://ashokChat:Viratashok@chat-app-free.gksijtl.mongodb.net/',
+    uri: 'mongodb://localhost:27017'
 }
 appConfig.apiVersion = "/v1";
 

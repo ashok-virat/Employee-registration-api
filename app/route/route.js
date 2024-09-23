@@ -10,6 +10,7 @@ let setRouter = (app) => {
     app.post(`${baseUrl}/createArt`, controller.createArt);
     app.get(`${baseUrl}/arts/:userId`, controller.getArtsByUser);
     app.post(`${baseUrl}/completeArt`, controller.comleteArt);
+    app.get(`${baseUrl}/allarts`, controller.getAllArts);
 }
 
 module.exports = {

@@ -21,6 +21,10 @@ const artModel = new Schema({
         type: String,
         default: ''
     },
+    ownerName: {
+        type: String,
+        default: ''
+    },
     createdOn: {
         type: Date,
         default: moment().toDate()

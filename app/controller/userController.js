@@ -90,7 +90,7 @@ const approveUser = async (req, res) => {
 
 const createArt = async (req, res) => {
     try {
-        const { artName, createdBy, description, status
+        const { artName, createdBy, description, status, ownerName
         } = req.body;
 
         if (!artName || !createdBy) {
@@ -101,7 +101,8 @@ const createArt = async (req, res) => {
             artName,
             createdBy,
             description,
-            status
+            status,
+            ownerName
         });
 
         await newArt.save();
@@ -180,6 +181,31 @@ const comleteArt = async (req, res) => {
     }
 }
 
+const getAllArts = async (req, res) => {
+    try {
+        const { fromDate, toDate } = req.query;
+        let filter = {};
+
+        if (fromDate && toDate) {
+            filter.createdOn = {
+                $gte: new Date(fromDate),
+                $lte: new Date(toDate),
+            };
+        }
+
+        const arts = await ArtModel.find(filter);
+
+        if (arts.length === 0) {
+            return res.status(404).json({ message: 'No arts found' });
+        }
+
+        res.status(200).json(arts);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error retrieving arts', error: error.message });
+    }
+};
+
 module.exports = {
     signup: signup,
     login: login,
@@ -187,5 +213,6 @@ module.exports = {
     approveUser: approveUser,
     getArtsByUser,
     createArt,
-    comleteArt
+    comleteArt,
+    getAllArts,
 }
