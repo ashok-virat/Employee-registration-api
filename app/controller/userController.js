@@ -7,7 +7,7 @@ const moment = require('moment');
 
 let signup = async (req, res) => {
     try {
-        const { email, password, userName, firstName, lastName, userType, status, isApproved } = req.body;
+        const { email, password, userName, firstName, lastName, userType, isApproved } = req.body;
 
         if (!email || !password || !userName || !firstName || !lastName) {
             return res.status(400).send("All fields (email, password, username, first name, last name) are required.");
@@ -15,7 +15,6 @@ let signup = async (req, res) => {
 
         let createnewuser = new userModel({
             email,
-            status,
             password,
             userName,
             userType,
