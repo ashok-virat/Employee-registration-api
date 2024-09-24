@@ -59,7 +59,7 @@ const login = async (req, res) => {
 
 const getAllusers = async (req, res) => {
     try {
-        const data = await userModel.find({ userType: 'employe' }).select('-password');
+        const data = await userModel.find({ userType: 'employe' }).select('-password').sort({ createdOn: -1 });
         res.send(data)
     }
     catch (e) {
@@ -97,12 +97,15 @@ const createArt = async (req, res) => {
             return res.status(400).json({ message: 'Art name and creator (UUID) are required.' });
         }
 
+        const createdOn = moment().toDate()
+
         const newArt = new ArtModel({
             artName,
             createdBy,
             description,
             status,
-            ownerName
+            ownerName,
+            createdOn
         });
 
         await newArt.save();
@@ -110,7 +113,7 @@ const createArt = async (req, res) => {
         res.status(201).json({ message: 'Art created successfully', art: newArt });
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: 'Error creating art', error: error.message });
+        res.status(500).json({ message: 'Error creating arcrt', error: error.message });
     }
 };
 
@@ -122,7 +125,7 @@ const getArtsByUser = async (req, res) => {
             return res.status(400).json({ message: 'User ID (UUID) is required.' });
         }
 
-        const arts = await ArtModel.find({ createdBy: userId });
+        const arts = await ArtModel.find({ createdBy: userId }).sort({ createdOn: -1 });
 
         if (arts.length === 0) {
             return res.status(404).json({ message: 'No arts found for this user.' });
@@ -193,7 +196,7 @@ const getAllArts = async (req, res) => {
             };
         }
 
-        const arts = await ArtModel.find(filter);
+        const arts = await ArtModel.find(filter).sort({ createdOn: -1 });
 
         if (arts.length === 0) {
             return res.status(404).json({ message: 'No arts found' });

@@ -27,7 +27,7 @@ const artModel = new Schema({
     },
     createdOn: {
         type: Date,
-        default: moment().toDate()
+        default: null
     },
     completedOn: {
         type: Date,
