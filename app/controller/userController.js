@@ -7,7 +7,7 @@ const moment = require('moment');
 
 let signup = async (req, res) => {
     try {
-        const { email, password, userName, firstName, lastName, userType, status } = req.body;
+        const { email, password, userName, firstName, lastName, userType, status, isApproved } = req.body;
 
         if (!email || !password || !userName || !firstName || !lastName) {
             return res.status(400).send("All fields (email, password, username, first name, last name) are required.");
@@ -20,7 +20,8 @@ let signup = async (req, res) => {
             userName,
             userType,
             firstName,
-            lastName
+            lastName,
+            isApproved
         });
 
         const findUser = await userModel.findOne({
