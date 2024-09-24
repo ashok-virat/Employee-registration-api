@@ -205,13 +205,11 @@ const getAllArts = async (req, res) => {
             };
         }
 
-        const arts = await ArtModel.find(filter).sort({ createdOn: -1 });
+        const inProgressCount = await ArtModel.countDocuments({ ...filter, status: 'inProgress' })
 
-        if (arts.length === 0) {
-            return res.status(200).json({ message: 'No arts found' });
-        }
+        const completedCount = await ArtModel.countDocuments({ ...filter, status: 'completed' })
 
-        res.status(200).json(arts);
+        res.status(200).json({ inProgressCount, completedCount });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Error retrieving arts', error: error.message });
