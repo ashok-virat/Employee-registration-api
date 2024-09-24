@@ -4,6 +4,8 @@ const userModel = mongoose.model('User');
 const artpath = require('./../model/artModel');
 const ArtModel = mongoose.model('Art');
 const moment = require('moment');
+const jwt = require('jsonwebtoken');
+const secretKey = "ak-vk";
 
 let signup = async (req, res) => {
     try {
@@ -55,7 +57,12 @@ const login = async (req, res) => {
             isApproved: true,
         }).select('-password');
         if (data) {
-            res.status(200).send(data)
+            const token = jwt.sign({ id: data._id, email: data.email, userName: data.userName }, secretKey, { expiresIn: '1h' });
+
+            res.status(200).send({
+                token,
+                user: data,
+            });
         }
         else {
             res.status(404).send("User not found or admin not yet approved.");
