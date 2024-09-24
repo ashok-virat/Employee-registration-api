@@ -11,6 +11,7 @@ let setRouter = (app) => {
     app.get(`${baseUrl}/arts/:userId`, controller.getArtsByUser);
     app.post(`${baseUrl}/completeArt`, controller.comleteArt);
     app.get(`${baseUrl}/allarts`, controller.getAllArts);
+    app.get(`${baseUrl}/alluserlevelarts`, controller.getArtsGroupedByCreatedBy);
 }
 
 module.exports = {

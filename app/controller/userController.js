@@ -199,7 +199,7 @@ const getAllArts = async (req, res) => {
         const arts = await ArtModel.find(filter).sort({ createdOn: -1 });
 
         if (arts.length === 0) {
-            return res.status(404).json({ message: 'No arts found' });
+            return res.status(200).json({ message: 'No arts found' });
         }
 
         res.status(200).json(arts);
@@ -208,6 +208,63 @@ const getAllArts = async (req, res) => {
         res.status(500).json({ message: 'Error retrieving arts', error: error.message });
     }
 };
+
+const getArtsGroupedByCreatedBy = async (req, res) => {
+    try {
+        const { fromDate, toDate } = req.query;
+        let filter = {};
+
+        if (fromDate && toDate) {
+            filter.createdOn = {
+                $gte: new Date(fromDate),
+                $lte: new Date(toDate)
+            };
+        }
+
+        const artsGroupedByCreatedBy = await ArtModel.aggregate([
+            {
+                $match: filter
+            },
+            {
+                $group: {
+                    _id: "$createdBy",
+                    totalArts: { $sum: 1 },
+                    ownerName: { $first: "$ownerName" },
+                    completedArts: {
+                        $sum: { $cond: [{ $eq: ["$status", "completed"] }, 1, 0] }
+                    },
+                    inProgressArts: {
+                        $sum: { $cond: [{ $eq: ["$status", "inProgress"] }, 1, 0] }
+                    },
+                    arts: {
+                        $push: {
+                            artName: "$artName",
+                            description: "$description",
+                            status: "$status",
+                            createdOn: "$createdOn",
+                            completedOn: "$completedOn",
+                            timeTaken: "$timeTaken"
+                        }
+                    }
+                }
+            },
+            {
+                $sort: { _id: 1 }
+            }
+        ]);
+
+        if (artsGroupedByCreatedBy.length === 0) {
+            return res.status(200).json({ message: 'No arts found' });
+        }
+
+        res.status(200).json(artsGroupedByCreatedBy);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error retrieving grouped arts', error: error.message });
+    }
+};
+
+
 
 module.exports = {
     signup: signup,
@@ -218,4 +275,5 @@ module.exports = {
     createArt,
     comleteArt,
     getAllArts,
+    getArtsGroupedByCreatedBy
 }
