@@ -7,33 +7,42 @@ const moment = require('moment');
 
 let signup = async (req, res) => {
     try {
-        let createnewuser = new userModel({
-            email: req.body.email,
-            status: req.body.status,
-            password: req.body.password,
-            userName: req.body.userName,
-            userType: req.body.userType
-        })
-        const findUser = await userModel.findOne({
-            $or: [{ email: req.body.email }, { userName: req.body.userName }],
-        })
-        if (findUser) {
-            res.send('use different email and username')
+        const { email, password, userName, firstName, lastName, userType, status } = req.body;
+
+        if (!email || !password || !userName || !firstName || !lastName) {
+            return res.status(400).send("All fields (email, password, username, first name, last name) are required.");
         }
-        else {
+
+        let createnewuser = new userModel({
+            email,
+            status,
+            password,
+            userName,
+            userType,
+            firstName,
+            lastName
+        });
+
+        const findUser = await userModel.findOne({
+            $or: [{ email }, { userName }]
+        });
+
+        if (findUser) {
+            return res.status(400).send("Use a different email or username.");
+        } else {
             createnewuser.save()
                 .then(result => {
-                    res.send(result);
+                    res.status(201).send(result);
                 })
                 .catch(err => {
-                    res.status(404).send('User Is Not Created');
+                    res.status(500).send("User could not be created.");
                 });
         }
-    }
-    catch (e) {
-        res.send(e)
+    } catch (e) {
+        res.status(500).send(e.message || "An error occurred.");
     }
 }
+
 
 const login = async (req, res) => {
     try {
