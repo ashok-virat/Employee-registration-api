@@ -256,6 +256,16 @@ const getArtsGroupedByCreatedBy = async (req, res) => {
                     inProgressArts: {
                         $sum: { $cond: [{ $eq: ["$status", "inProgress"] }, 1, 0] }
                     },
+                    totalTimeTaken: {
+                        $sum: {
+                            $add: [
+                                { $multiply: ["$timeTaken.days", 86400] },
+                                { $multiply: ["$timeTaken.hours", 3600] },
+                                { $multiply: ["$timeTaken.minutes", 60] },
+                                "$timeTaken.seconds"
+                            ]
+                        }
+                    },
                     arts: {
                         $push: {
                             artName: "$artName",
@@ -272,6 +282,19 @@ const getArtsGroupedByCreatedBy = async (req, res) => {
                 $sort: { _id: 1 }
             }
         ]);
+
+        artsGroupedByCreatedBy.forEach(user => {
+            const totalSeconds = user.totalTimeTaken;
+
+            user.timeTaken = {
+                days: Math.floor(totalSeconds / 86400),
+                hours: Math.floor((totalSeconds % 86400) / 3600),
+                minutes: Math.floor((totalSeconds % 3600) / 60),
+                seconds: totalSeconds % 60
+            };
+
+            delete user.totalTimeTaken;
+        });
 
         if (artsGroupedByCreatedBy.length === 0) {
             return res.status(200).json({ message: 'No arts found' });
