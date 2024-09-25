@@ -207,8 +207,8 @@ const getAllArts = async (req, res) => {
         let x = null;
         let y = null;
         if (fromDate && toDate) {
-            const startOfDay = moment(fromDate).startOf('day').toDate();
-            const endOfDay = moment(toDate).endOf('day').toDate();
+            const startOfDay = moment.tz(fromDate, "Asia/Kolkata").startOf('day').toDate();
+            const endOfDay = moment.tz(toDate, "Asia/Kolkata").endOf('day').toDate();
             x = new Date(startOfDay);
             y = new Date(endOfDay)
             filter.createdOn = {
@@ -234,8 +234,8 @@ const getArtsGroupedByCreatedBy = async (req, res) => {
         let filter = {};
 
         if (fromDate && toDate) {
-            const startOfDay = moment(fromDate).startOf('day').toDate();
-            const endOfDay = moment(toDate).endOf('day').toDate();
+            const startOfDay = moment.tz(fromDate, "Asia/Kolkata").startOf('day').toDate();
+            const endOfDay = moment.tz(toDate, "Asia/Kolkata").endOf('day').toDate();
             console.log(startOfDay)
             console.log(endOfDay)
             filter.createdOn = {
