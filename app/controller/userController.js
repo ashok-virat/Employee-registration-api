@@ -207,7 +207,8 @@ const getAllArts = async (req, res) => {
 
         if (fromDate && toDate) {
             const startOfDay = new Date(fromDate).setHours(0, 0, 0, 0);
-            const endOfDay = new Date(toDate).setHours(23, 59, 59, 999);
+            const endOfDay = new Date(new Date(toDate).setHours(0, 0, 0, 0) + 86400000 - 1);
+
 
             filter.createdOn = {
                 $gte: new Date(startOfDay),
@@ -233,8 +234,9 @@ const getArtsGroupedByCreatedBy = async (req, res) => {
 
         if (fromDate && toDate) {
             const startOfDay = new Date(fromDate).setHours(0, 0, 0, 0);
-            const endOfDay = new Date(toDate).setHours(23, 59, 59, 999);
-
+            const endOfDay = new Date(new Date(toDate).setHours(0, 0, 0, 0) + 86400000 - 1);
+            console.log(startOfDay)
+            console.log(endOfDay)
             filter.createdOn = {
                 $gte: new Date(startOfDay),
                 $lte: new Date(endOfDay),
