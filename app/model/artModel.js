@@ -26,11 +26,11 @@ const artModel = new Schema({
         default: ''
     },
     createdOn: {
-        type: String,
+        type: Date,
         default: null
     },
     completedOn: {
-        type: String,
+        type: Date,
         default: null
     },
     timeTaken: {
