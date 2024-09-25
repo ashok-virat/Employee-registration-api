@@ -209,8 +209,8 @@ const getAllArts = async (req, res) => {
         if (fromDate && toDate) {
             const startOfDay = moment(fromDate).startOf('day').toDate();
             const endOfDay = moment(toDate).endOf('day').toDate();
-            x = startOfDay;
-            y = toDate
+            x = new Date(startOfDay);
+            y = new Date(endOfDay)
             filter.createdOn = {
                 $gte: new Date(startOfDay),
                 $lte: new Date(endOfDay),
