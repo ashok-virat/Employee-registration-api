@@ -3,7 +3,7 @@ const userpath = require('./../model/userModel');
 const userModel = mongoose.model('User');
 const artpath = require('./../model/artModel');
 const ArtModel = mongoose.model('Art');
-const moment = require('moment');
+const moment = require('moment-timezone');
 const jwt = require('jsonwebtoken');
 const secretKey = "ak-vk";
 
