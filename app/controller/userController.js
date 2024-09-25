@@ -204,11 +204,13 @@ const getAllArts = async (req, res) => {
     try {
         const { fromDate, toDate } = req.query;
         let filter = {};
-
+        let x = null;
+        let y = null;
         if (fromDate && toDate) {
             const startOfDay = moment(fromDate).startOf('day').toDate();
             const endOfDay = moment(toDate).endOf('day').toDate();
-
+            x = startOfDay;
+            y = toDate
             filter.createdOn = {
                 $gte: new Date(startOfDay),
                 $lte: new Date(endOfDay),
@@ -219,7 +221,7 @@ const getAllArts = async (req, res) => {
 
         const completedCount = await ArtModel.countDocuments({ ...filter, status: 'completed' })
 
-        res.status(200).json({ inProgressCount, completedCount, startOfDay, endOfDay });
+        res.status(200).json({ inProgressCount, completedCount, x, y });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Error retrieving arts', error: error.message });
