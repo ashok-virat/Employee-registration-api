@@ -219,7 +219,7 @@ const getAllArts = async (req, res) => {
 
         const completedCount = await ArtModel.countDocuments({ ...filter, status: 'completed' })
 
-        res.status(200).json({ inProgressCount, completedCount });
+        res.status(200).json({ inProgressCount, completedCount, startOfDay, endOfDay });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Error retrieving arts', error: error.message });
